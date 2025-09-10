@@ -341,7 +341,7 @@ https://learn.microsoft.com/en-us/azure/api-management/azure-openai-token-limit-
 
 1. Znajdż "Azure API Managment" w portalu azure, następnie przejdź do "APIs" i wybierz API dla OpenAI o nazwie "polisy-ai"
 2. Przejdź do sekcji "Inbound processing" a następnie "Policies", kliknij w oznaczenie </>
-3. W edytorze XML dodaj w sekcji `<inbound>` przed `<base />`:
+3. W edytorze XML dodaj w sekcji `<inbound>` po `<base />`:
 
 ```xml
 <azure-openai-token-limit counter-key="@(context.Subscription.Id)" tokens-per-minute="100" estimate-prompt-tokens="true" />
@@ -665,3 +665,4 @@ Gratulacje! Stworzyłeś kompletny interfejs API za pomocą Azure API Management
 - Transformuje i anonimizuje dane
 
 - Jest monitorowany w Application Insights
+
