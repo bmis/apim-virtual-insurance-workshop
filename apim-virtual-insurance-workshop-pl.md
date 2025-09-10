@@ -281,7 +281,7 @@ https://learn.microsoft.com/en-us/entra/identity-platform/quickstart-register-ap
 https://learn.microsoft.com/en-us/azure/api-management/validate-azure-ad-token-policy
 
 1. Przejdź do "Policies" dla "PolisyAPI"
-2. W edytorze XML dodaj w sekcji `<inbound>` przed `<base />`:
+2. W edytorze XML dodaj w sekcji `<inbound>` po `<base />`:
 
 ```xml
 <policies>
@@ -663,4 +663,5 @@ Gratulacje! Stworzyłeś kompletny interfejs API za pomocą Azure API Management
 - Kontroluje ruch za pomocą limitów wywołań
 - Limit tokenów dla zapytań AI
 - Transformuje i anonimizuje dane
+
 - Jest monitorowany w Application Insights
