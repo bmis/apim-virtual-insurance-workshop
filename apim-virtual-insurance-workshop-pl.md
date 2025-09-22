@@ -168,11 +168,11 @@ https://learn.microsoft.com/en-us/azure/api-management/azure-openai-emit-token-m
 
 7. Kliknij "Send" i sprawdź odpowiedź
 8. Tym razem nie wyłączylismy w zakładce "Settings" opcji "Subscription required", a jednak udało się nam wysłać zapytanie. Dzieje się to dlatego że portal automatycznie podkłada klucz, możesz to sprawdzić poprzez zakładkę "Trace".
-### 2.3 Zmiana ustawień subskrypcji dla API polisy-ai
+### 2.3 Weryfikacja ustawień subskrypcji dla API polisy-ai
 
 1. Przejdź do "APIs" i wybierz "polisy-ai"
 2. Przejdź do zakładki "Settings"
-3. W sekcji "Subscription" zaznacz opcję "Subscription required"
+3. W sekcji "Subscription" upewnij się że jest zaznaczona opcję "Subscription required"
 4. Upewnij się że w "Header name" wartość to "Ocp-Apim-Subscription-Key" a w "Query parameter name" widnieje wartość "subscription-key"
 5. Kliknij "Save"
 
@@ -208,7 +208,7 @@ https://learn.microsoft.com/en-us/azure/api-management/api-management-subscripti
 
 ### 3.2 Włączanie wymogu klucza subskrypcji dla API
 
-1. Przejdź do "APIs" i wybierz "PolisyAPI"
+1. Przejdź do "APIs" i wybierz "Polisy-API"
 2. Przejdź do zakładki "Settings"
 3. W sekcji "Subscription" zaznacz opcję "Subscription required"
 4. Upewnij się że w "Header name" wartość to "Ocp-Apim-Subscription-Key" a w "Query parameter name" widnieje wartość "subscription-key"
@@ -264,6 +264,8 @@ Ta polityka ogranicza liczbę wywołań do 5 na 30 sekund.
 ## 5. OAUTH 2.0
 
 ### 5.1 Rejestracja aplikacji w Microsoft Entra ID
+
+**W przypadku braku możliwości rejestracji aplikacji w Microsoft Entra ID (SPN), informacje dotyczące wymaganych danych dostępowych, takich jak clientId, tenantId oraz secret, zostaną Ci dostarczone.**
 
 https://learn.microsoft.com/en-us/entra/identity-platform/quickstart-register-app
 
@@ -331,6 +333,12 @@ https://learn.microsoft.com/en-us/azure/logic-apps/quickstart-create-example-con
 
 ### 6.1 Skonfiguruj "Azure Logic App" aby umożliwiało wykorzystanie "Managed Identity" do łączenia się z innymi usługami takimi jak np. "Azure API Management".
 
+**W przypadku braku uprawnień do Microsoft Entra ID użyj polecenia Azure CLI, aby wyświetlić identyfikator aplikacji (Application ID). Możesz to zrobić poprzez Azure Cloud Shell.**
+
+```bash
+az ad sp show --id '[Object (principal) ID]' | ConvertFrom-Json | select displayName, appId
+```
+
 1. Przejdź do "Azure Logic App" o nazwie "la-test01".
 2. Przejdź do zakładki "Identity", kliknij "System assigned", wybierz "ON" a następnie "Save".
 3. W EntraID znajdź "Application ID", który dotyczy "Managed Identity" utworzonego dla "Azure Logic App". Przejdź do "Entra ID" następnie "Enterprise applications", w "Application type" wybierz "Managed Identity", wyszukaj nazwę "la-test01". Zanotuj "Application ID".
@@ -344,7 +352,7 @@ https://learn.microsoft.com/en-us/azure/api-management/azure-openai-token-limit-
 3. W edytorze XML dodaj w sekcji `<inbound>` po `<base />`:
 
 ```xml
-<azure-openai-token-limit counter-key="@(context.Subscription.Id)" tokens-per-minute="100" estimate-prompt-tokens="true" />
+<azure-openai-token-limit counter-key="@(context.Subscription.Id)" tokens-per-minute="10000" estimate-prompt-tokens="true" />
 ```
 
 4. Dodaj również politykę uwierzytelniania Managed Identity do Azure OpenAI:
@@ -447,7 +455,7 @@ Pełna polityka powinna wyglądać następująco:
 }
 ```
 
-8. W polu "Advanced parameters" zaznacz "Authentication" oraz "Subscription key". W części "Authentication Types" wybierz "Managed identity" w części "Managed identity" wybierz "System-assigned managed identity". W polu "Subscription key" wpisz klucz który wygenerowałeś w punkcie "3.1".
+8. W polu "Advanced parameters" zaznacz "Authentication" oraz "Subscription key". W części "Authentication Types" wybierz "Managed identity" w części "Managed identity" wybierz "System-assigned managed identity", następnie w polu Audience wpisz https://management.azure.com/. W polu "Subscription key" wpisz klucz który wygenerowałeś w punkcie "3.1".
 9. Zmień ustawienia pierwszej akcji o nazwie "polisy-api", aby wykorzystywała "System-assigned managed identity".
 10. Sprawdź działanie Azure Logic App, wybierz przycisk "Run" a następnie "Run with payload". W sekcji "Body" wprowadź poniższy kod
 
